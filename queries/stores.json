@@ -1,0 +1,3 @@
+{
+  "query": "{ stores { id, name, departments { id, name } } }"
+}

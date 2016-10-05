@@ -1,40 +1,34 @@
 import Product from './Product'
+import Department from './Department'
+
+function fetchProducts(database, query, parameters) {
+  return database.query(query, parameters)
+    .then((results) => {
+      return results.rows.map((row) => {
+        const department = new Department(row.department_id, row.department_name)
+        return new Product(row.id, row.name, department)
+      })
+    })
+}
 
 export default class ProductRepository {
-  constructor(database, departmentRepository) {
+  constructor(database) {
     this.database = database
-    this.departmentRepository = departmentRepository
   }
 
   findAll() {
-    return this.database.query('SELECT * FROM product')
-      .then((results) => {
-        return results.rows.map((row) => {
-          const department = this.departmentRepository.findById(row.department_id)
-          console.log('product:', row.name, ' department:', department)
-          return new Product(row.id, row.name, department)
-        })
-      })
+    return fetchProducts(this.database,
+      'SELECT p.*, d.id AS department_id, d.name AS department_name FROM product p JOIN department d ON p.department_id=d.id', [])
   }
 
   findById(id) {
-    return this.database.query('SELECT * FROM product WHERE id=$1', [id])
-      .then((results) => {
-        return results.rows.map((row) => {
-          const department = this.departmentRepository.findById(row.department_id)
-          return new Product(row.id, row.name, department)
-        })
-      })
+    return fetchProducts(this.database,
+      'SELECT p.*, d.id AS department_id, d.name AS department_name FROM product p JOIN department d ON p.department_id=d.id WHERE p.id=$1', [id])
   }
 
   findByName(name) {
-    return this.database.query('SELECT * FROM product WHERE name=$1', [name])
-      .then((results) => {
-        return results.rows.map((row) => {
-          const department = this.departmentRepository.findById(row.department_id)
-          return new Product(row.id, row.name, department)
-        })
-      })
+    return fetchProducts(this.database, 
+      'SELECT p.*, d.id AS department_id, d.name AS department_name FROM product p JOIN department d ON p.department_id=d.id WHERE p.name=$1', [name])
   }
 
 }

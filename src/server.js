@@ -12,8 +12,8 @@ const port = process.env.PORT || 3000
 
 const database = new Database()
 const departmentRepository = new DepartmentRepository(database)
-const productRepository = new ProductRepository(database, departmentRepository)
-const storeRepository = new StoreRepository(database, departmentRepository)
+const productRepository = new ProductRepository(database)
+const storeRepository = new StoreRepository(database)
 
 // The root provides a resolver function for each API endpoint
 const root = {
@@ -31,8 +31,6 @@ const root = {
     console.log("Processing request: stores")
     return storeRepository.findAll()
   },
-
-
 }
 
 var app = express();

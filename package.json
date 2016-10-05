@@ -2,9 +2,10 @@
   "name": "grocerylister-graphql",
   "version": "1.0.0",
   "description": "GraphQL server with PostgreSQL and Node.js",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "supervisor src/index.js",
+    "debug": "node-debug src/index.js",
     "build": "babel src -d lib"
   },
   "author": "Cory Johannsen",

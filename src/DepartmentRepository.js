@@ -1,35 +1,30 @@
 import Department from './Department'
 
+
+function fetchDepartments(database, query, parameters) {
+  return database.query(query, parameters)
+    .then((results) => {
+      return results.rows.map((row) => {
+        return new Department(row.id, row.name)
+      })
+    })
+}
+
 export default class DepartmentRepository {
   constructor(database) {
     this.database = database
   }
 
   findAll() {
-    return this.database.query('SELECT * FROM department')
-      .then((results) => {
-        return results.rows.map((row) => {
-          return new Department(row.id, row.name)
-        })
-      })
+    return fetchDepartments(this.database, 'SELECT * FROM department', [])
   }
 
   findById(id) {
-    return this.database.query('SELECT * FROM department WHERE id=$1', [id])
-      .then((results) => {
-        return results.rows.map((row) => {
-          return new Department(row.id, row.name)
-        })
-      })
+    return fetchDepartments(this.database, 'SELECT * FROM department WHERE id=$1', [id])
   }
 
   findByName(name) {
-    return this.database.query('SELECT * FROM department WHERE name=$1', [name])
-      .then((results) => {
-        return results.rows.map((row) => {
-          return new Department(row.id, row.name)
-        })
-      })
+    return fetchDepartments(this.database, 'SELECT * FROM department WHERE name=$1', [name])
   }
 
   findByStoreId(storeId) {
@@ -41,4 +36,5 @@ export default class DepartmentRepository {
         })
       })
   }
+
 }

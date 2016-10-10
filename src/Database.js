@@ -15,7 +15,7 @@ export default class Database {
   }
 
   query = (text, values) => {
-    // console.log('query:', text, values ? values : '')
+    // console.log(`Database.query: \"${text}\" ${values}`)
     return this.pool.query(text, values)
   }
 }

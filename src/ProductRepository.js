@@ -27,7 +27,7 @@ export default class ProductRepository {
   }
 
   findByName(name) {
-    return fetchProducts(this.database, 
+    return fetchProducts(this.database,
       'SELECT p.*, d.id AS department_id, d.name AS department_name FROM product p JOIN department d ON p.department_id=d.id WHERE p.name=$1', [name])
   }
 

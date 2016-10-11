@@ -44,24 +44,17 @@ export default class DepartmentRepository {
         }
       })
   }
-  //
-  // findByStoreId(storeId) {
-  //   return this.database.query(
-  //     'SELECT d.*,s.index FROM department d JOIN store_department s ON d.id=s.department_id WHERE s.store_id=$1 ORDER BY s.index', [storeId])
-  //     .then((results) => {
-  //       return results.rows.map((row) => {
-  //         return new Department(row.id, row.name)
-  //       })
-  //     })
-  // }
 
   create(departmentName) {
-    return this.database.query(
-        'INSERT INTO department (name) VALUES($1)', [departmentName])
-        .then((results) => {
-          const row = results.rows[0]
-          console.log(row)
-
+    console.log('DepartmentRepository.create:', departmentName)
+    const query = 'INSERT INTO department (name) VALUES($1)'
+    console.log('DepartmentRepository.create: query:', query)
+    return this.database.query(query, [departmentName])
+      .then((results) => {
+        return this.findByName(departmentName)
+      }).catch(e => {
+        console.log(e)
+        return e
       })
   }
 

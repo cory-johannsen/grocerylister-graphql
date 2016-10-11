@@ -41,7 +41,7 @@ const root = {
 
   addDepartmentToStore: (input) => {
     const {departmentName, storeId} = input
-    console.log(`Processing request: addDepartmentToStore(${departmentName}, ${storeId})`)
+    console.log(`Processing request: addDepartmentToStore('${departmentName}', ${storeId})`)
 
     return Promise.all([
       storeRepository.findById(storeId).then((s) => {
@@ -51,12 +51,12 @@ const root = {
       departmentRepository.findByName(departmentName).then((d) => {
         if (d) {
           // A department with this name already exists, use it
-          // console.log('addDepartmentToStore: found existing department', d.name)
+          console.log('addDepartmentToStore: found existing department', d.name)
           return d
         }
         else {
           // Create a new department
-          // console.log('addDepartmentToStore: creating new department')
+          console.log('addDepartmentToStore: creating new department')
           return departmentRepository.create(departmentName)
         }
       })
@@ -73,8 +73,25 @@ const root = {
     }).catch((error) => {
       console.log('addDepartmentToStore error:', error)
     })
+  },
 
-
+  updateDepartmentsForStore: (input) => {
+      const {departments, storeId} = input
+      console.log(`Processing request: updateDepartmentsForStore`)
+      return Promise.all([
+        storeRepository.findById(storeId).then((s) => {
+          // console.log('addDepartmentToStore: found store', s.name)
+          return s
+        })
+      ]).then((values) => {
+        // console.log('values', values)
+        const store = values[0]
+        store.departments = departments
+        storeRepository.update(store)
+        return store
+      }).catch((error) => {
+        console.log('updateDepartmentsForStore error:', error)
+      })
   }
 }
 

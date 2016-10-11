@@ -32,9 +32,14 @@ const schema = buildSchema(`
     groceryLists: [GroceryList!]
   }
 
+  input DepartmentInput {
+    id: Int!
+    name: String!
+  }
+
   type Mutation {
     addDepartmentToStore(departmentName: String!, storeId: Int!): Store!
-    updateDepartmentsForStore(departmentIds: [Int!], storeId: Int!): Store!
+    updateDepartmentsForStore(departments: [DepartmentInput!], storeId: Int!): Store!
   }
 
 `)

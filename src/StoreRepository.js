@@ -2,7 +2,7 @@ import Store from './Store'
 import Department from './Department'
 
 function fetchStores(database, query, parameters) {
-  console.log('fetchStores entered: query:', query, ', parameters:', parameters)
+  // console.log('fetchStores entered: query:', query, ', parameters:', parameters)
   return database.query(query, parameters)
     .then((resultSet) => {
       const stores = new Map()
@@ -19,7 +19,7 @@ function fetchStores(database, query, parameters) {
       })
       const results = []
       stores.forEach((value, key, map) => {
-        console.log('fetchStore returning entry', key, value)
+        // console.log('fetchStore returning entry', key, value)
         results.push(value)
       })
       return results
@@ -47,9 +47,9 @@ export default class StoreRepository {
   findById(id) {
     return fetchStores(this.database, query + ' WHERE s.id=$1 ORDER BY s.name, sd.index', [id])
       .then((results) => {
-        console.log('StoreRepository.findById - results', results)
+        // console.log('StoreRepository.findById - results', results)
         if(results.length > 0) {
-          console.log('StoreRepository.findById - returning', results[0])
+          // console.log('StoreRepository.findById - returning', results[0])
           return results[0]
         }
       }).catch((error) => {
@@ -74,7 +74,7 @@ export default class StoreRepository {
 
   update(store) {
     // update the store data
-    console.log('StoreRepository.update: store:', store)
+    // console.log('StoreRepository.update: store:', store)
     return this.database.query('UPDATE store SET name=$1 WHERE id=$2', [store.name, store.id])
       .then((resultSet) => {
         // Remove the department mappings
@@ -82,7 +82,7 @@ export default class StoreRepository {
           .then((resultSet) => {
             // Insert the new department mappings
             store.departments.map((department, index) => {
-              console.log('StoreRepository.update: inserting store_department values:', [store.id, department.id, index])
+              // console.log('StoreRepository.update: inserting store_department values:', [store.id, department.id, index])
               this.database.query('INSERT INTO store_department (store_id, department_id, index) VALUES ($1, $2, $3)', [store.id, department.id, index])
                 .catch((error) => {
                   console.log('update error:', error)

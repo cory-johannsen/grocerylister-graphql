@@ -16,6 +16,7 @@ const schema = buildSchema(`
     id: Int!
     name: String!
     departments: [Department!]
+    groceryList: GroceryList!
   }
 
   type GroceryList {
@@ -30,6 +31,7 @@ const schema = buildSchema(`
     products: [Product!]
     stores: [Store!]
     groceryLists: [GroceryList!]
+    groceryList(storeId: Int!): GroceryList!
   }
 
   input DepartmentInput {
@@ -40,6 +42,8 @@ const schema = buildSchema(`
   type Mutation {
     addDepartmentToStore(departmentName: String!, storeId: Int!): Store!
     updateDepartmentsForStore(departments: [DepartmentInput!], storeId: Int!): Store!
+
+    addProduct(name: String!, departmentId: Int!): Product!
   }
 
 `)

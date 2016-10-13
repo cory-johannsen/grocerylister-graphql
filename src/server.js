@@ -39,6 +39,12 @@ const root = {
     return groceryListRepository.findAll()
   },
 
+  groceryList: (input) => {
+    const {storeId} = input
+    console.log(`Processing request: groceryList(${storeId})`)
+    return groceryListRepository.findByStoreId(storeId)
+  },
+
   addDepartmentToStore: (input) => {
     const {departmentName, storeId} = input
     console.log(`Processing request: addDepartmentToStore('${departmentName}', ${storeId})`)
@@ -91,6 +97,19 @@ const root = {
         return store
       }).catch((error) => {
         console.log('updateDepartmentsForStore error:', error)
+      })
+  },
+
+  addProduct: (input) => {
+    const {name, departmentId} = input
+    console.log(`Processing request: addProduct('${name}', ${departmentId})`)
+    return Promise.all([productRepository.create(name, departmentId)]
+      ).then((values) => {
+        const product = values[0]
+        console.log('addProduct returning:', product)
+        return product
+      }).catch((error) => {
+        console.log('addProduct error:', error)
       })
   }
 }

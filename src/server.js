@@ -111,7 +111,65 @@ const root = {
       }).catch((error) => {
         console.log('addProduct error:', error)
       })
-  }
+  },
+
+  addProductToGroceryList: (input) => {
+    const {productId, groceryListId} = input
+    console.log(`Processing request: addProductToGroceryList('${productId}', ${groceryListId})`)
+
+    return Promise.all([
+      groceryListRepository.findById(groceryListId).then((g) => {
+        return g
+      }),
+      productRepository.findById(productId).then((p) => {
+        return p
+      })
+    ]).then((values) => {
+      // console.log('values', values)
+      const groceryList = values[0]
+      const product = values[1]
+
+      console.log('addProductToGroceryList: groceryList:', groceryList, ', product:', product)
+
+      groceryList.products.push(product)
+      groceryListRepository.update(groceryList)
+      return groceryList
+    }).catch((error) => {
+      console.log('addProductToGroceryList error:', error)
+    })
+  },
+
+  removeProductFromGroceryList: (input) => {
+    const {productId, groceryListId} = input
+    console.log(`Processing request: removeProductFromGroceryList('${productId}', ${groceryListId})`)
+
+    return Promise.all([
+      groceryListRepository.findById(groceryListId).then((g) => {
+        return g
+      }),
+      productRepository.findById(productId).then((p) => {
+        return p
+      })
+    ]).then((values) => {
+      // console.log('values', values)
+      const groceryList = values[0]
+      const product = values[1]
+
+      console.log('removeProductFromGroceryList: groceryList:', groceryList, ', product:', product)
+      const products = []
+      groceryList.products.forEach((p) => {
+        if (p.id !== product.id) {
+          products.push(p)
+        }
+      })
+
+      groceryList.products = products
+      groceryListRepository.update(groceryList)
+      return groceryList
+    }).catch((error) => {
+      console.log('addProductToGroceryList error:', error)
+    })
+  },
 }
 
 var app = express();

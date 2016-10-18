@@ -46,10 +46,20 @@ export default class GroceryListRepository {
 
   findById(id) {
     return fetchGroceryLists(this.database, query + ' WHERE g.id=$1', [id])
+      .then((results) => {
+        if (results.length > 0) {
+          return results[0]
+        }
+      })
   }
 
   findByName(name) {
     return fetchGroceryLists(this.database, query + ' WHERE name=$1', [name])
+      .then((results) => {
+        if (results.length > 0) {
+          return results[0]
+        }
+      })
   }
 
   findByStoreId(storeId) {
@@ -64,6 +74,33 @@ export default class GroceryListRepository {
         console.log('findByStoreId error:', error)
         return error
       })
+  }
+
+  update(groceryList) {
+    // update the grocery list data
+    // console.log('StoreRepository.update: store:', store)
+    return this.database.query('UPDATE grocery_list SET name=$1 WHERE id=$2', [groceryList.name, groceryList.id])
+      .then((resultSet) => {
+        // Remove the product mappings
+        return this.database.query('DELETE FROM grocery_list_product WHERE grocery_list_id=$1', [groceryList.id])
+          .then((resultSet) => {
+            // Insert the new product mappings
+            groceryList.products.map((product) => {
+              // console.log('StoreRepository.update: inserting store_department values:', [store.id, department.id, index])
+              this.database.query('INSERT INTO grocery_list_product (grocery_list_id, product_id) VALUES ($1, $2)', [groceryList.id, product.id])
+                .catch((error) => {
+                  console.log('update error:', error)
+                })
+            })
+          }).catch((error) => {
+            console.log('update error:', error)
+            return error
+          })
+      }).catch((error) => {
+        console.log('update error:', error)
+        return error
+      })
+
   }
 
 }

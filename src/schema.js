@@ -44,6 +44,9 @@ const schema = buildSchema(`
     updateDepartmentsForStore(departments: [DepartmentInput!], storeId: Int!): Store!
 
     addProduct(name: String!, departmentId: Int!): Product!
+
+    addProductToGroceryList(productId: Int!, groceryListId: Int!): GroceryList!
+    removeProductFromGroceryList(productId: Int!, groceryListId: Int!): GroceryList!
   }
 
 `)
